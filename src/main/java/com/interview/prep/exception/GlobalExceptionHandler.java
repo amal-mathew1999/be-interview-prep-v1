@@ -103,6 +103,36 @@ public class GlobalExceptionHandler {
         return ResponseEntity.status(HttpStatus.NOT_FOUND).body(error);
     }
 
+    @ExceptionHandler(ShortCodeNotFoundException.class)
+    public ResponseEntity<ErrorResponse> handleShortCodeNotFound(ShortCodeNotFoundException ex) {
+        ErrorResponse error = ErrorResponse.builder()
+                .status(HttpStatus.NOT_FOUND.value())
+                .errorType(ErrorType.NOT_FOUND)
+                .message(ex.getMessage())
+                .build();
+        return ResponseEntity.status(HttpStatus.NOT_FOUND).body(error);
+    }
+
+    @ExceptionHandler(ShortCodeExpiredException.class)
+    public ResponseEntity<ErrorResponse> handleShortCodeExpired(ShortCodeExpiredException ex) {
+        ErrorResponse error = ErrorResponse.builder()
+                .status(HttpStatus.GONE.value())
+                .errorType(ErrorType.INVALID_INPUT)
+                .message(ex.getMessage())
+                .build();
+        return ResponseEntity.status(HttpStatus.GONE).body(error);
+    }
+
+    @ExceptionHandler(IllegalArgumentException.class)
+    public ResponseEntity<ErrorResponse> handleIllegalArgument(IllegalArgumentException ex) {
+        ErrorResponse error = ErrorResponse.builder()
+                .status(HttpStatus.BAD_REQUEST.value())
+                .errorType(ErrorType.INVALID_INPUT)
+                .message(ex.getMessage())
+                .build();
+        return ResponseEntity.badRequest().body(error);
+    }
+
     @ExceptionHandler(NoResourceFoundException.class)
     public ResponseEntity<ErrorResponse> handleNoResourceFound(NoResourceFoundException ex) {
         ErrorResponse error = ErrorResponse.builder()
