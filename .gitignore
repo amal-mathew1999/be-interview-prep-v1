@@ -50,3 +50,6 @@ hs_err_pid*
 .env
 *.pem
 *.key
+
+### Claude ###
+CLAUDE.md
