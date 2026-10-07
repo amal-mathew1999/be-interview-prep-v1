@@ -13,6 +13,8 @@ import org.springframework.web.bind.annotation.RestControllerAdvice;
 import org.springframework.web.method.annotation.MethodArgumentTypeMismatchException;
 import org.springframework.web.servlet.resource.NoResourceFoundException;
 
+import jakarta.validation.ConstraintViolationException;
+
 import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -101,6 +103,46 @@ public class GlobalExceptionHandler {
                 .message(ex.getMessage())
                 .build();
         return ResponseEntity.status(HttpStatus.NOT_FOUND).body(error);
+    }
+
+    @ExceptionHandler(ShortCodeNotFoundException.class)
+    public ResponseEntity<ErrorResponse> handleShortCodeNotFound(ShortCodeNotFoundException ex) {
+        ErrorResponse error = ErrorResponse.builder()
+                .status(HttpStatus.NOT_FOUND.value())
+                .errorType(ErrorType.NOT_FOUND)
+                .message(ex.getMessage())
+                .build();
+        return ResponseEntity.status(HttpStatus.NOT_FOUND).body(error);
+    }
+
+    @ExceptionHandler(ShortCodeExpiredException.class)
+    public ResponseEntity<ErrorResponse> handleShortCodeExpired(ShortCodeExpiredException ex) {
+        ErrorResponse error = ErrorResponse.builder()
+                .status(HttpStatus.GONE.value())
+                .errorType(ErrorType.EXPIRED)
+                .message(ex.getMessage())
+                .build();
+        return ResponseEntity.status(HttpStatus.GONE).body(error);
+    }
+
+    @ExceptionHandler(InvalidUrlException.class)
+    public ResponseEntity<ErrorResponse> handleInvalidUrl(InvalidUrlException ex) {
+        ErrorResponse error = ErrorResponse.builder()
+                .status(HttpStatus.BAD_REQUEST.value())
+                .errorType(ErrorType.INVALID_INPUT)
+                .message(ex.getMessage())
+                .build();
+        return ResponseEntity.badRequest().body(error);
+    }
+
+    @ExceptionHandler(ConstraintViolationException.class)
+    public ResponseEntity<ErrorResponse> handleConstraintViolation(ConstraintViolationException ex) {
+        ErrorResponse error = ErrorResponse.builder()
+                .status(HttpStatus.BAD_REQUEST.value())
+                .errorType(ErrorType.INVALID_INPUT)
+                .message("Invalid path parameter")
+                .build();
+        return ResponseEntity.badRequest().body(error);
     }
 
     @ExceptionHandler(NoResourceFoundException.class)
