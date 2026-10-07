@@ -1,0 +1,22 @@
+spring:
+  application:
+    name: be-interview-prep
+
+  datasource:
+    url: jdbc:h2:mem:testdb
+    driver-class-name: org.h2.Driver
+    username: sa
+    password:
+
+  jpa:
+    hibernate:
+      ddl-auto: create-drop
+    show-sql: false
+
+  h2:
+    console:
+      enabled: false
+
+jwt:
+  secret: test-secret-key-that-is-at-least-32-bytes-long-for-hmac-sha256
+  expiration-ms: 900000
