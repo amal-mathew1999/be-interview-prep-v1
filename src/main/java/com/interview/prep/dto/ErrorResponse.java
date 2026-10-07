@@ -25,6 +25,8 @@ public class ErrorResponse {
         INVALID_INPUT,
         NOT_FOUND,
         EXPIRED,
+        UNAUTHORIZED,
+        FORBIDDEN,
         UNEXPECTED
     }
 

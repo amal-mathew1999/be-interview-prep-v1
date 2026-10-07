@@ -720,11 +720,10 @@ class TaskControllerTest {
         }
 
         @Test
-        void unknownEndpoint_returns404() throws Exception {
+        void unknownEndpoint_returns401WhenUnauthenticated() throws Exception {
             mockMvc.perform(get("/api/unknown"))
-                    .andExpect(status().isNotFound())
-                    .andExpect(jsonPath("$.errorType", is("NOT_FOUND")))
-                    .andExpect(jsonPath("$.message", is("The requested resource was not found")));
+                    .andExpect(status().isUnauthorized())
+                    .andExpect(jsonPath("$.errorType", is("UNAUTHORIZED")));
         }
     }
 
