@@ -8,8 +8,8 @@ import com.interview.prep.model.TaskStatus;
 import com.interview.prep.repository.TaskRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
-import java.time.LocalDateTime;
 import java.util.List;
 
 @Service
@@ -18,13 +18,13 @@ public class TaskService {
 
     private final TaskRepository taskRepository;
 
+    @Transactional
     public TaskResponse createTask(TaskRequest request) {
         Task task = Task.builder()
                 .title(request.getTitle())
                 .description(request.getDescription())
                 .status(request.getStatus() != null ? request.getStatus() : TaskStatus.TODO)
                 .dueDate(request.getDueDate())
-                .createdDate(LocalDateTime.now())
                 .build();
         return TaskResponse.from(taskRepository.save(task));
     }
@@ -46,6 +46,7 @@ public class TaskService {
         return TaskResponse.from(task);
     }
 
+    @Transactional
     public TaskResponse updateTask(Long id, TaskRequest request) {
         Task task = taskRepository.findById(id)
                 .orElseThrow(() -> new TaskNotFoundException(id));
@@ -60,6 +61,7 @@ public class TaskService {
         return TaskResponse.from(taskRepository.save(task));
     }
 
+    @Transactional
     public void deleteTask(Long id) {
         if (!taskRepository.existsById(id)) {
             throw new TaskNotFoundException(id);
