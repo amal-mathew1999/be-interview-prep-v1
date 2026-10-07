@@ -24,9 +24,6 @@ public class UrlShortenerController {
 
     private final UrlShortenerService urlShortenerService;
 
-    /**
-     * Shortens a URL and returns the short code.
-     */
     @PostMapping("/api/urls/shorten")
     public ResponseEntity<ShortenResponse> shorten(@Valid @RequestBody ShortenRequest request,
                                                    HttpServletRequest httpRequest) {
@@ -36,9 +33,6 @@ public class UrlShortenerController {
         return ResponseEntity.status(HttpStatus.CREATED).body(response);
     }
 
-    /**
-     * Redirects a short code to the original URL.
-     */
     @GetMapping("/s/{shortCode}")
     public ResponseEntity<Void> redirect(@PathVariable String shortCode) {
         String originalUrl = urlShortenerService.resolve(shortCode);
@@ -47,9 +41,6 @@ public class UrlShortenerController {
         return new ResponseEntity<>(headers, HttpStatus.FOUND);
     }
 
-    /**
-     * Returns visit stats for a short code.
-     */
     @GetMapping("/api/urls/{shortCode}/stats")
     public ResponseEntity<UrlStatsResponse> getStats(@PathVariable String shortCode) {
         return ResponseEntity.ok(urlShortenerService.getStats(shortCode));

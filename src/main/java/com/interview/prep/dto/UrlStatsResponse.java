@@ -21,9 +21,6 @@ public class UrlStatsResponse {
     private long visitCount;
     private LocalDateTime createdDate;
 
-    /**
-     * Creates a UrlStatsResponse from a ShortenedUrl entity.
-     */
     public static UrlStatsResponse from(ShortenedUrl entity) {
         return UrlStatsResponse.builder()
                 .shortCode(entity.getShortCode())

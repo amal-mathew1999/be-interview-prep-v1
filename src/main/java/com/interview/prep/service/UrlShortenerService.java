@@ -27,11 +27,6 @@ public class UrlShortenerService {
 
     private final ShortenedUrlRepository repository;
 
-    /**
-     * Shortens a URL and returns the short code and short URL.
-     * Each call creates a new short code, even for the same original URL.
-     * This allows independent expiry dates and visit tracking per link.
-     */
     @Transactional
     public ShortenResponse shorten(ShortenRequest request, String baseUrl) {
         validateUrl(request.getUrl());
@@ -47,12 +42,6 @@ public class UrlShortenerService {
         return ShortenResponse.from(saved, baseUrl);
     }
 
-    /**
-     * Resolves a short code to the original URL, increments visit count atomically.
-     *
-     * @throws ShortCodeNotFoundException if the code does not exist
-     * @throws ShortCodeExpiredException if the code has expired
-     */
     @Transactional
     public String resolve(String shortCode) {
         ShortenedUrl entity = repository.findByShortCode(shortCode)
@@ -66,11 +55,6 @@ public class UrlShortenerService {
         return entity.getOriginalUrl();
     }
 
-    /**
-     * Returns visit stats for a short code.
-     *
-     * @throws ShortCodeNotFoundException if the code does not exist
-     */
     @Transactional(readOnly = true)
     public UrlStatsResponse getStats(String shortCode) {
         ShortenedUrl entity = repository.findByShortCode(shortCode)

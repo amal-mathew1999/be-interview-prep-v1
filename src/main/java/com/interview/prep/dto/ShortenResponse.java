@@ -21,9 +21,6 @@ public class ShortenResponse {
     private String originalUrl;
     private LocalDate expiresAt;
 
-    /**
-     * Creates a ShortenResponse from a ShortenedUrl entity and base URL.
-     */
     public static ShortenResponse from(ShortenedUrl entity, String baseUrl) {
         return ShortenResponse.builder()
                 .shortCode(entity.getShortCode())
