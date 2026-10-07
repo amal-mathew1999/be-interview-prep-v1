@@ -1,0 +1,56 @@
+{
+  "project": {
+    "name": "java-project",
+    "language": "java",
+    "buildTool": "maven"
+  },
+  "agents": {
+    "reviewer": {
+      "path": ".claude/agents/reviewer.md",
+      "description": "Reviews code for quality, security, and convention compliance",
+      "triggerOn": ["pre-pr", "manual"]
+    },
+    "task": {
+      "path": ".claude/agents/task.md",
+      "description": "Executes atomic tasks that result in one PR each",
+      "triggerOn": ["manual"]
+    },
+    "pr": {
+      "path": ".claude/agents/pr.md",
+      "description": "Creates well-structured pull requests",
+      "triggerOn": ["post-task", "manual"]
+    }
+  },
+  "skills": {
+    "review": {
+      "path": ".claude/skills/review.md",
+      "description": "Run code review on current changes",
+      "shortcut": "/review"
+    },
+    "task": {
+      "path": ".claude/skills/task.md",
+      "description": "Start a new atomic task",
+      "shortcut": "/task"
+    },
+    "pr": {
+      "path": ".claude/skills/pr.md",
+      "description": "Create a PR from current branch",
+      "shortcut": "/pr"
+    }
+  },
+  "hooks": {
+    "postTask": ".claude/hooks/post-task.sh",
+    "preCommit": ".claude/hooks/pre-commit.sh",
+    "postReview": ".claude/hooks/post-review.sh"
+  },
+  "conventions": {
+    "style": "google-java",
+    "indentation": "4-spaces",
+    "maxLineLength": 120,
+    "testFramework": "junit5",
+    "assertionLibrary": "assertj",
+    "branchPattern": "task/<id>-<description>",
+    "commitStyle": "imperative",
+    "prMaxLines": 400
+  }
+}
