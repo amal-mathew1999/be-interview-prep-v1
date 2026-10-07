@@ -224,6 +224,7 @@ class UrlShortenerControllerTest {
 
             mockMvc.perform(get("/s/expir123"))
                     .andExpect(status().isGone())
+                    .andExpect(jsonPath("$.errorType").value("EXPIRED"))
                     .andExpect(jsonPath("$.message").value("Short code has expired: expir123"));
         }
     }

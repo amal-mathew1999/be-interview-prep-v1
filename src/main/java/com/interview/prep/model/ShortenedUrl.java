@@ -39,7 +39,7 @@ public class ShortenedUrl {
 
     @Column(nullable = false)
     @Builder.Default
-    private Long visitCount = 0L;
+    private long visitCount = 0L;
 
     @CreationTimestamp
     @Column(nullable = false, updatable = false)

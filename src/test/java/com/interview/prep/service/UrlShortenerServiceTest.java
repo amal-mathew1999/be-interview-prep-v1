@@ -3,6 +3,7 @@ package com.interview.prep.service;
 import com.interview.prep.dto.ShortenRequest;
 import com.interview.prep.dto.ShortenResponse;
 import com.interview.prep.dto.UrlStatsResponse;
+import com.interview.prep.exception.InvalidUrlException;
 import com.interview.prep.exception.ShortCodeExpiredException;
 import com.interview.prep.exception.ShortCodeNotFoundException;
 import com.interview.prep.model.ShortenedUrl;
@@ -94,7 +95,7 @@ class UrlShortenerServiceTest {
                     .build();
 
             assertThatThrownBy(() -> service.shorten(request, BASE_URL))
-                    .isInstanceOf(IllegalArgumentException.class)
+                    .isInstanceOf(InvalidUrlException.class)
                     .hasMessageContaining("Invalid URL");
         }
 
@@ -106,7 +107,7 @@ class UrlShortenerServiceTest {
                     .build();
 
             assertThatThrownBy(() -> service.shorten(request, BASE_URL))
-                    .isInstanceOf(IllegalArgumentException.class);
+                    .isInstanceOf(InvalidUrlException.class);
         }
     }
 
@@ -124,12 +125,12 @@ class UrlShortenerServiceTest {
                     .build();
 
             when(repository.findByShortCode("abc12345")).thenReturn(Optional.of(entity));
-            when(repository.incrementVisitCount("abc12345")).thenReturn(1);
+            when(repository.incrementVisitCountIfNotExpired("abc12345", LocalDate.now())).thenReturn(1);
 
             String result = service.resolve("abc12345");
 
             assertThat(result).isEqualTo("https://www.example.com");
-            verify(repository).incrementVisitCount("abc12345");
+            verify(repository).incrementVisitCountIfNotExpired("abc12345", LocalDate.now());
         }
 
         @Test
@@ -157,7 +158,7 @@ class UrlShortenerServiceTest {
                     .isInstanceOf(ShortCodeExpiredException.class)
                     .hasMessageContaining("expir123");
 
-            verify(repository, never()).incrementVisitCount(anyString());
+            verify(repository, never()).incrementVisitCountIfNotExpired(anyString(), any(LocalDate.class));
         }
 
         @Test
@@ -170,7 +171,7 @@ class UrlShortenerServiceTest {
                     .build();
 
             when(repository.findByShortCode("future12")).thenReturn(Optional.of(entity));
-            when(repository.incrementVisitCount("future12")).thenReturn(1);
+            when(repository.incrementVisitCountIfNotExpired("future12", LocalDate.now())).thenReturn(1);
 
             String result = service.resolve("future12");
             assertThat(result).isEqualTo("https://www.example.com");

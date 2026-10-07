@@ -24,6 +24,7 @@ public class ErrorResponse {
     public enum ErrorType {
         INVALID_INPUT,
         NOT_FOUND,
+        EXPIRED,
         UNEXPECTED
     }
 

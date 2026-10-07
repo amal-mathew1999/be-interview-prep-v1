@@ -11,6 +11,8 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import com.interview.prep.exception.InvalidUrlException;
+
 import java.net.MalformedURLException;
 import java.net.URI;
 import java.net.URISyntaxException;
@@ -51,7 +53,7 @@ public class UrlShortenerService {
             throw new ShortCodeExpiredException(shortCode);
         }
 
-        repository.incrementVisitCount(shortCode);
+        repository.incrementVisitCountIfNotExpired(shortCode, LocalDate.now());
         return entity.getOriginalUrl();
     }
 
@@ -67,7 +69,7 @@ public class UrlShortenerService {
             URI uri = new URI(url);
             uri.toURL();
         } catch (URISyntaxException | MalformedURLException | IllegalArgumentException ex) {
-            throw new IllegalArgumentException("Invalid URL: " + url);
+            throw new InvalidUrlException(url);
         }
     }
 
