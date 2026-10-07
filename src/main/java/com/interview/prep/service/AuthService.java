@@ -3,6 +3,7 @@ package com.interview.prep.service;
 import com.interview.prep.dto.AuthResponse;
 import com.interview.prep.dto.LoginRequest;
 import com.interview.prep.dto.RegisterRequest;
+import com.interview.prep.exception.UsernameAlreadyExistsException;
 import com.interview.prep.model.AppUser;
 import com.interview.prep.model.Role;
 import com.interview.prep.repository.AppUserRepository;
@@ -27,7 +28,7 @@ public class AuthService {
     @Transactional
     public AuthResponse register(RegisterRequest request) {
         if (userRepository.existsByUsername(request.getUsername())) {
-            throw new IllegalStateException("Username already taken: " + request.getUsername());
+            throw new UsernameAlreadyExistsException(request.getUsername());
         }
 
         AppUser user = AppUser.builder()

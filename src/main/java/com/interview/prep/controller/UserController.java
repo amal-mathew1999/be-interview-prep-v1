@@ -1,8 +1,7 @@
 package com.interview.prep.controller;
 
 import com.interview.prep.dto.UserProfileResponse;
-import com.interview.prep.model.AppUser;
-import com.interview.prep.repository.AppUserRepository;
+import com.interview.prep.service.UserService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
@@ -17,20 +16,15 @@ import java.util.List;
 @RequiredArgsConstructor
 public class UserController {
 
-    private final AppUserRepository userRepository;
+    private final UserService userService;
 
     @GetMapping("/me")
     public ResponseEntity<UserProfileResponse> getProfile(@AuthenticationPrincipal String username) {
-        AppUser user = userRepository.findByUsername(username)
-                .orElseThrow(() -> new IllegalStateException("Authenticated user not found"));
-        return ResponseEntity.ok(UserProfileResponse.from(user));
+        return ResponseEntity.ok(userService.getProfile(username));
     }
 
     @GetMapping("/admin/users")
     public ResponseEntity<List<UserProfileResponse>> listAllUsers() {
-        List<UserProfileResponse> users = userRepository.findAll().stream()
-                .map(UserProfileResponse::from)
-                .toList();
-        return ResponseEntity.ok(users);
+        return ResponseEntity.ok(userService.listAllUsers());
     }
 }
